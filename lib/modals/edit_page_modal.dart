@@ -59,7 +59,6 @@ Future<void> editPageModel(
       final titleAlternative = titleAlternativeController.text;
       final webUrl = webUrlController.text;
       final episode = double.parse(episodeController.text);
-      log('$title, $episode');
 
       await bookmarkService.updateBookmark(
         bookmark.id,
@@ -198,7 +197,6 @@ Future<void> editPageModel(
                                     final wantDelete = await deleteSingleDialog(
                                       context,
                                     );
-                                    log(wantDelete.toString());
                                     if (wantDelete) {
                                       await bookmarkService.deleteBookmark(
                                         bookmark.id,

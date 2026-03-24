@@ -53,7 +53,6 @@ Future<void> createPageModal(
       final titleAlternative = titleAlternativeController.text;
       final webUrl = webUrlController.text;
       final episode = double.parse(episodeController.text);
-      log('$title, $episode');
       await bookmarkService.createBookmark(
         title,
         titleAlternative,

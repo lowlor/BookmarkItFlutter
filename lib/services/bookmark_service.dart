@@ -37,9 +37,7 @@ class BookmarkService {
     await db.rawDelete('DELETE FROM bookmark');
     _bookmarks = [];
     _bookmarkController.add([]);
-    final check = await db.query(tableName);
-    log(check.toString());
-    log('deleted');
+    await db.query(tableName);
   }
 
   Future<void> deleteBookmark(int id) async {
@@ -50,7 +48,6 @@ class BookmarkService {
       where: 'id = ?',
       whereArgs: [id],
     );
-    log('delete $deletedNumber');
     if (deletedNumber > 0) {
       _bookmarks.removeWhere((curr) => curr.id == id);
       _bookmarkController.add(_bookmarks);
@@ -80,10 +77,7 @@ class BookmarkService {
       where: 'id = ?',
       whereArgs: [id],
     );
-    log(updateCount.toString());
     final updatedBookmark = await getBookmark(id);
-    log('${updatedBookmark.title}, ${updatedBookmark.episode}');
-    log('message');
     _bookmarks.removeWhere((curr) => curr.id == id);
     _bookmarks.add(updatedBookmark);
     _bookmarkController.add(_bookmarks);
@@ -98,7 +92,6 @@ class BookmarkService {
       whereArgs: [id],
     );
     if (bookmark.isNotEmpty) {
-      log(bookmark.toString());
       final newBookmark = BookmarkDatabase.fromMap(bookmark.first);
       _bookmarks.removeWhere((curr) => curr.id == id);
       _bookmarks.add(newBookmark);

@@ -17,7 +17,6 @@ class FileService {
         allowedExtensions: ['db'],
       );
       if(result != null){
-        log(result.files.single.path.toString());
         final File oldBookmark = File(join(docPath.path,dbName));
         await oldBookmark.delete();
         final File newBookmark = File(result.files.single.path!);
@@ -25,7 +24,7 @@ class FileService {
         
       }
     } catch (e) {
-      log(e.toString());
+      throw Exception(e);
     }
   }
 
@@ -39,7 +38,6 @@ class FileService {
           files: [XFile(join(docPath.path, dbName))],
         ),
       );
-      log(results.toString());
       //final downloadPath = await Directory('path')
       //if (Platform.isAndroid && deviceInfo.version.sdkInt <= 30) {
       //  if (await Permission.manageExternalStorage.request().isGranted) {
@@ -62,7 +60,7 @@ class FileService {
       //  await newDatabase.copy(savePath);
       //}
     } catch (e) {
-      log(e.toString());
+      throw Exception(e);
     }
   }
 }
