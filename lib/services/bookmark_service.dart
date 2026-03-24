@@ -45,7 +45,16 @@ class BookmarkService {
   Future<void> deleteBookmark(int id) async {
     await _ensureDbIsOpen();
     final db = _checkDbExistance();
-    await db.delete(tableName, where: 'id = ?', whereArgs: [id]);
+    final deletedNumber = await db.delete(
+      tableName,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+    log('delete $deletedNumber');
+    if (deletedNumber > 0) {
+      _bookmarks.removeWhere((curr) => curr.id == id);
+      _bookmarkController.add(_bookmarks);
+    }
   }
 
   Future<void> updateBookmark(
@@ -75,7 +84,7 @@ class BookmarkService {
     final updatedBookmark = await getBookmark(id);
     log('${updatedBookmark.title}, ${updatedBookmark.episode}');
     log('message');
-    _bookmarks.removeWhere((curr)=> curr.id == id);
+    _bookmarks.removeWhere((curr) => curr.id == id);
     _bookmarks.add(updatedBookmark);
     _bookmarkController.add(_bookmarks);
   }
@@ -83,17 +92,21 @@ class BookmarkService {
   Future<BookmarkDatabase> getBookmark(int id) async {
     await _ensureDbIsOpen();
     final db = _checkDbExistance();
-    final bookmark = await db.query(tableName, where: 'id = ?', whereArgs: [id]);
-    if(bookmark.isNotEmpty){
+    final bookmark = await db.query(
+      tableName,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+    if (bookmark.isNotEmpty) {
+      log(bookmark.toString());
       final newBookmark = BookmarkDatabase.fromMap(bookmark.first);
-      _bookmarks.removeWhere((curr)=>curr.id == id);
+      _bookmarks.removeWhere((curr) => curr.id == id);
       _bookmarks.add(newBookmark);
       _bookmarkController.add(_bookmarks);
       return newBookmark;
-    }else{
+    } else {
       throw Exception('not found');
     }
-
   }
 
   Future<BookmarkDatabase> createBookmark(
@@ -105,7 +118,7 @@ class BookmarkService {
   ) async {
     await _ensureDbIsOpen();
     final db = _checkDbExistance();
-    
+
     try {
       final Map<String, Object?> mapToInsert = {
         titleColumn: title,
@@ -163,6 +176,13 @@ class BookmarkService {
     _db = null;
   }
 
+  Future<void> openDbAfterImport() async {
+    await closeDb();
+    _bookmarks = [];
+    _bookmarkController.add(_bookmarks);
+    await openDb();
+  }
+
   Future<void> openDb() async {
     if (_db != null) {
       throw DatabaseAlreadyOpenException();
@@ -172,7 +192,7 @@ class BookmarkService {
       final db = await openDatabase(dbPath);
       _db = db;
       await db.execute(createDbQuery);
-      await _cacheData();      
+      await _cacheData();
     }
   }
 }
@@ -199,7 +219,9 @@ class BookmarkDatabase {
       title = map[titleColumn] as String,
       titleAlternative = map[titleAlternativeColumn] as String,
       webUrl = map[webUrlColumn] as String,
-      episode = map[episodeColumn] as double,
+      episode = map[episodeColumn] is int
+          ? (map[episodeColumn] as int).toDouble()
+          : map[episodeColumn] as double,
       image = map[imageColumn] as Uint8List;
 }
 
