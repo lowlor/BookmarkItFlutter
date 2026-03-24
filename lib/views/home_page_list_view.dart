@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:bookmarkit/modals/edit_page_modal.dart';
 import 'package:bookmarkit/services/bookmark_service.dart';

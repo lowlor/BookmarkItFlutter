@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:bookmarkit/services/bookmark_service.dart' show dbName;

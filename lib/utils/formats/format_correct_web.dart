@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 String formatCorrectWeb(String content) {
   if (content.length < 8) {

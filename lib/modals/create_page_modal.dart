@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer' show log;
 import 'dart:io';
 import 'package:bookmarkit/services/bookmark_service.dart';
 import 'package:bookmarkit/utils/dialogs/confirm_create_edit_dialog.dart';

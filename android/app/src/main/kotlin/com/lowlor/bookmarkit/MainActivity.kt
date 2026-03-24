@@ -1,4 +1,4 @@
-package com.example.bookmarkit
+package com.lowlor.bookmarkit
 
 import io.flutter.embedding.android.FlutterActivity
 

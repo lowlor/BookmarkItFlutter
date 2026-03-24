@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 String formatEpisodeText(String content) {
   String originalText = content;
