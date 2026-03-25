@@ -1,4 +1,4 @@
-![image info](./assets/adaptive-icon.png)
+![image info](./assets/drawer_icon.png)
 
 # BookmarkIt
 
