@@ -133,7 +133,7 @@ flutter_native_splash:
   #! ANDROID 12+ configuration:
   android_12:
     # background color
-    color: "#42a5f5"
+    color: "#ffffff"
     # color_dark: "#042a49"
 
     # center-logo

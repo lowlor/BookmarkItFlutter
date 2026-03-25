@@ -7,10 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 
-Future<void> createPageModal(
-  BuildContext context,
-  BookmarkService bookmarkService,
-) async {
+Future<void> createPageModal({
+  required BuildContext context,
+  required BookmarkService bookmarkService,
+  String textFromShare = "",
+  bool fromShare = false,
+}) async {
   //late File _file;
   final placeholderImage = await rootBundle.load('assets/placeholder.png');
   Uint8List image = placeholderImage.buffer.asUint8List();
@@ -25,6 +27,10 @@ Future<void> createPageModal(
       imageController.sink.add(image);
     },
   );
+
+  if (fromShare) {
+    titleController.text = textFromShare;
+  }
 
   Future<void> pickImage() async {
     final file = await imgPick.pickImage(

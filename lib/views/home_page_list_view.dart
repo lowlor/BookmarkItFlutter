@@ -1,4 +1,3 @@
-
 import 'package:bookmarkit/modals/edit_page_modal.dart';
 import 'package:bookmarkit/services/bookmark_service.dart';
 import 'package:bookmarkit/utils/dialogs/error_dialog.dart';
@@ -49,6 +48,7 @@ class HomePageListView extends StatelessWidget {
                 }
               },
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   SizedBox(width: 6),
@@ -73,50 +73,59 @@ class HomePageListView extends StatelessWidget {
                     ),
                   ),
                   SizedBox(width: 8),
-                  SizedBox(
-                    width: 174,
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        //border: BoxBorder.all(color: Colors.black),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          SizedBox(height: 4),
-                          Text(
-                            bookmark.title,
-                            style: TextStyle(fontSize: 20),
-                            softWrap: true,
-                            maxLines: 3,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          Text(
-                            bookmark.titleAlternative,
-                            style: TextStyle(fontSize: 16, color: Colors.grey),
-                            softWrap: true,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          SizedBox(height: 4),
-                          SizedBox(
-                            height: 2,
-                            width: 160,
-                            child: ColoredBox(color: Colors.grey),
-                          ),
-                          Spacer(),
-                          Align(
-                            alignment: AlignmentGeometry.bottomEnd,
-                            child: Text(
-                              formatEpisodeText(bookmark.episode.toString()),
-                              style: TextStyle(fontSize: 24),
+                  Expanded(
+                    child: SizedBox(
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          //border: BoxBorder.all(color: Colors.black),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            SizedBox(height: 4),
+                            Text(
+                              bookmark.title,
+                              style: TextStyle(fontSize: 20),
+                              softWrap: true,
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                          ),
-                          SizedBox(height: 5),
-                        ],
+                            Text(
+                              bookmark.titleAlternative,
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey,
+                                fontWeight: FontWeight.w300,
+                              ),
+                              softWrap: true,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            SizedBox(height: 4),
+                            SizedBox(
+                              height: 2,
+                              width: 160,
+                              child: ColoredBox(color: Colors.grey),
+                            ),
+                            Spacer(),
+                            Align(
+                              alignment: AlignmentGeometry.bottomEnd,
+                              child: Text(
+                                formatEpisodeText(bookmark.episode.toString()),
+                                style: TextStyle(
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.w100,
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 2),
+                          ],
+                        ),
                       ),
                     ),
                   ),
+                  SizedBox(width: 10),
                 ],
               ),
             ),

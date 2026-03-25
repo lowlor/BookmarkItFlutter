@@ -1,9 +1,13 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:bookmarkit/modals/create_page_modal.dart';
 import 'package:bookmarkit/services/bookmark_service.dart';
 import 'package:bookmarkit/services/file_service.dart';
 import 'package:bookmarkit/utils/dialogs/delete_all_dialog.dart';
 import 'package:bookmarkit/views/home_page_list_view.dart';
 import 'package:flutter/material.dart';
+import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -15,18 +19,51 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   late final BookmarkService bookmarkService;
   late final FileService _fileService;
+  late StreamSubscription _intentSub;
   late final Future<String> _initFuture;
+
   @override
   initState() {
+    super.initState();
     _fileService = FileService();
     bookmarkService = BookmarkService();
     _initFuture = bookmarkService.initialize();
-    super.initState();
+
+    _intentSub = ReceiveSharingIntent.instance.getMediaStream().listen(
+      (value) async {
+        if (value.isEmpty) return;
+        await _initFuture;
+        if (context.mounted)
+          createPageModal(
+            fromShare: true,
+            textFromShare: value.map((f) => f.toMap()).first['path'] as String,
+            context: context,
+            bookmarkService: bookmarkService,
+          );
+      },
+      onError: (err) {
+        log(err);
+      },
+    );
+
+    ReceiveSharingIntent.instance.getInitialMedia().then((value) async {
+      if (value.isEmpty) return;
+      await _initFuture;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        createPageModal(
+          fromShare: true,
+          textFromShare: value.map((f) => f.toMap()).first['path'] as String,
+          context: context,
+          bookmarkService: bookmarkService,
+        );
+        ReceiveSharingIntent.instance.reset();
+      });
+    });
   }
 
   @override
-  dispose() async {
-    await bookmarkService.closeDb();
+  dispose() {
+    bookmarkService.closeDb();
     super.dispose();
   }
 
@@ -106,7 +143,7 @@ class _HomeViewState extends State<HomeView> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.white,
         onPressed: () {
-          createPageModal(context, bookmarkService);
+          createPageModal(context: context, bookmarkService: bookmarkService);
         },
         child: Icon(Icons.add, color: Colors.black),
       ),
@@ -115,7 +152,7 @@ class _HomeViewState extends State<HomeView> {
         builder: (context, asyncSnapshot) {
           switch (asyncSnapshot.connectionState) {
             case ConnectionState.done:
-              if (asyncSnapshot.hasData) {
+            if (asyncSnapshot.hasData) {
                 return StreamBuilder(
                   stream: bookmarkService.allBookmark,
                   builder: (context, asyncSnapshot) {
